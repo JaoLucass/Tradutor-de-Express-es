@@ -10,16 +10,17 @@ public:
         lookahead = cin.get();
     }
 
+    // Função para analisar expressões
     void expr() {
         term();
         while (true) {
             if (lookahead == '+') {
-                match('+'); 
-                term(); 
+                match('+');
+                term();
                 cout.put('+');
             } else if (lookahead == '-') {
-                match('-'); 
-                term(); 
+                match('-');
+                term();
                 cout.put('-');
             } else {
                 return;
@@ -27,15 +28,39 @@ public:
         }
     }
 
+    // Função para analisar termos (multiplicação e divisão)
     void term() {
+        factor();
+        while (true) {
+            if (lookahead == '*') {
+                match('*');
+                factor();
+                cout.put('*');
+            } else if (lookahead == '/') {
+                match('/');
+                factor();
+                cout.put('/');
+            } else {
+                return;
+            }
+        }
+    }
+
+    // Função para analisar fatores (números e parênteses)
+    void factor() {
         if (isdigit(lookahead)) {
             cout.put(lookahead);
             match(lookahead);
+        } else if (lookahead == '(') { // Trata os parênteses
+            match('(');
+            expr();
+            match(')');
         } else {
             throw runtime_error("syntax error");
         }
     }
 
+    // Função para casar e avançar a entrada
     void match(int t) {
         if (lookahead == t) {
             lookahead = cin.get();
@@ -59,3 +84,4 @@ int main() {
     }
     return 0;
 }
+
